@@ -62,7 +62,7 @@ class AI():
             pass
     
     def getnext(self):
-        return self.aistate.get_next_values(self.aistate.state, num)
+        return self.aistate.get_next_values(self.aistate.state, self.num)
         
 
 if __name__ == "__main__":
@@ -97,6 +97,7 @@ if __name__ == "__main__":
                     num = 0
                     hand = []
                     bjstate.start()
+                    ai = AI()
                     pass
                 else:
                     break
@@ -109,6 +110,7 @@ if __name__ == "__main__":
                     num = 0
                     hand = []
                     bjstate.start()
+                    ai = AI()
                     pass
                 else:
                     break
@@ -127,10 +129,11 @@ if __name__ == "__main__":
                     num = 0
                     hand = []
                     bjstate.start()
+                    ai = AI()
                     pass
                 else:
                     break
-            if ai.getnext() == 'blackjack':
+            elif ai.getnext() == 'blackjack':
                 print ('AI blackjack! You lose :(')
                 print('You had {} for a total of {}.'.format(hand, num))
                 print('AI had {} for a total of {}'.format(ai.hand, ai.num))
@@ -138,39 +141,40 @@ if __name__ == "__main__":
                     num = 0
                     hand = []
                     bjstate.start()
+                    ai = AI()
                     pass
                 else:
                     break
         elif inp == 2:
             while ai.standstate != True:
                 ai.decide()
-
-                print(ai.num, ai.getnext())
                 
-                if ai.getnext() == 'bust':
-                    print('You win!')
-                    print('You had {} for a total of {}.'.format(hand, num))
-                    print('AI had {} for a total of {}'.format(ai.hand, ai.num))
-                    if PlayAgain() == 1:
-                        num = 0
-                        hand = []
-                        bjstate.start()
-                        pass
-                    else:
-                        break
-                if ai.getnext() == 'blackjack':
-                    print ('AI blackjack! You lose :(')
-                    print('You had {} for a total of {}.'.format(hand, num))
-                    print('AI had {} for a total of {}'.format(ai.hand, ai.num))
-                    if PlayAgain() == 1:
-                        num = 0
-                        hand = []
-                        bjstate.start()
-                        pass
-                    else:
-                        break
+            if ai.getnext() == 'bust':
+                print('You win!')
+                print('You had {} for a total of {}.'.format(hand, num))
+                print('AI had {} for a total of {}'.format(ai.hand, ai.num))
+                if PlayAgain() == 1:
+                    num = 0
+                    hand = []
+                    bjstate.start()
+                    ai = AI()
+                    pass
+                else:
+                    break
+            elif ai.getnext() == 'blackjack':
+                print ('AI blackjack! You lose :(')
+                print('You had {} for a total of {}.'.format(hand, num))
+                print('AI had {} for a total of {}'.format(ai.hand, ai.num))
+                if PlayAgain() == 1:
+                    num = 0
+                    hand = []
+                    bjstate.start()
+                    ai = AI()
+                    pass
+                else:
+                    break
             
-            if ai.num > num:
+            elif ai.num > num:
                 print('AI wins! You lose :(')
                 print('You had {} for a total of {}.'.format(hand, num))
                 print('AI had {} for a total of {}'.format(ai.hand, ai.num))
@@ -178,6 +182,7 @@ if __name__ == "__main__":
                     num = 0
                     hand = []
                     bjstate.start()
+                    ai = AI()
                     pass
                 else:
                     break
@@ -189,15 +194,19 @@ if __name__ == "__main__":
                     num = 0
                     hand = []
                     bjstate.start()
+                    ai = AI()
                     pass
                 else:
                     break
             else:
                 print('It\'s a tie!')
+                print('You had {} for a total of {}.'.format(hand, num))
+                print('AI had {} for a total of {}'.format(ai.hand, ai.num))
                 if PlayAgain() == 1:
                     num = 0
                     hand = []
                     bjstate.start()
+                    ai = AI()
                     pass
                 else:
                     break

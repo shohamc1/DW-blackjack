@@ -14,6 +14,7 @@ Standard Python libraries used: ``random``, ``time``
 
 #### ``class bjsm``
 **B**lack**j**ack **S**tate **M**achine
+
 Defines the start state for the state machine for the user and the AI. Function ``get_next_values`` is to find the subsequent states for given total value of hand.
 - If hand value is 21, state is ``blackjack``
 - If hand value is under 21, state is ``ok``
@@ -42,7 +43,9 @@ Initialises player hand and state machine. Infinite loop that breaks out when us
 Random seed is generated every loop to ensure that the draws are truly random everytime.
 
 **If player hits**
+
 Player draws card, followed by AI. Game checks if player or AI gets busted or gets a blackjack. 
 
 **If player stands**
+
 AI hits every until it stands. Game checks if AI gets busted or gets a blackjack. If the checks pass then the script checks for which player has won by comparing the value of hands of the player and the AI.

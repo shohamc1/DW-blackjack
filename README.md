@@ -1,4 +1,4 @@
-# DW-blackjack
+# [DW-blackjack](https://github.com/shohamc1/dw-blackjack)
 A simple python blackjack game! Comes with built in dealer AI.
 
 ### How to play
@@ -27,7 +27,7 @@ Returns ``1`` if user wants to play again, ``0`` if they do not want to. ``ERROR
 
 
 #### ``class AI``
-Class that defines behavior of AI and it's functions
+Class that defines behavior of AI and it's functions. Inherits ``bjsm``.
 
 - ##### ``__init__()``
     Initialises the variables required for this class. It also initialises the state machine for the AI.
@@ -37,6 +37,14 @@ Class that defines behavior of AI and it's functions
     Decides if the AI should hit or stand. Probability of going over is calculated and a dice is rolled. If dice roll is lower than probability of going over then AI will hit, otherwise it will stand.
 - ##### ``getnext()``
     Calculates the next state of the AI.
+
+
+#### ``class Player``
+Class to store player variables. Inherits ``bjsm``.
+
+- ##### ``__init__()``
+    Initialises the variables required for this class. It also initialises the state machine for the player.
+
 
 #### ``__main__``
 Initialises player hand and state machine. Infinite loop that breaks out when user does not want to continue playing the game.

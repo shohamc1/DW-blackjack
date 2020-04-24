@@ -1,7 +1,3 @@
-'''TODO: Add in dealer AI
-For dealer AI: calculate probability of going over -> roll d100 -> if over then stand otherwise hit
-'''
-
 from libdw import sm
 from random import randint, seed
 import time
@@ -33,13 +29,12 @@ def PlayAgain():
     
     return 'ERROR'
 
-class AI():
+class AI(bjsm):
     def __init__ (self):
         self.num = 0
         self.hand = []
-        self.aistate = bjsm()
         self.standstate = False
-        self.aistate.start()
+        self.start()
     
     def hit(self):
         new = randint(1, 11)
@@ -62,54 +57,55 @@ class AI():
             pass
     
     def getnext(self):
-        return self.aistate.get_next_values(self.aistate.state, self.num)
-        
+        return self.get_next_values(self.state, self.num)
+
+class Player(bjsm):
+    def __init__ (self):
+        self.num = 0
+        self.hand = []
+        self.start()
+
 
 if __name__ == "__main__":
     # initalise variables
-    bjstate = bjsm()
-    bjstate.start()
-    num = 0
-    hand = [] #list of cards
     inp = ''
 
+    #instantiate player and AI classes
     ai = AI()
+    player = Player()
 
     # ask for options
     while True:
         seed(time.time())
-        inp = input('You hand is {}, for a total of {}\n1. Hit\n2. Stand\n'.format(hand, num))
+        inp = input('You hand is {}, for a total of {}\n1. Hit\n2. Stand\n'.format(player.hand, player.num))
         inp = int(inp)
 
         if inp == 1:
             # hit code
             new = randint(1, 11)
-            num += new
+            player.num += new
             if new == 11:
-                hand.append('A')
+                player.hand.append('A')
             else:
-                hand.append(new)
+                player.hand.append(new)
 
-            if bjstate.get_next_values(bjstate.state, num) == 'bust':
-                print('Busted! You lose :(\n{} for a total of {}.'.format(hand, num))
+            # check if player bust/blackjack
+            if player.get_next_values(player.state, player.num) == 'bust':
+                print('Busted! You lose :(\n{} for a total of {}.'.format(player.hand, player.num))
                 print('AI had {} for a total of {}'.format(ai.hand, ai.num))
                 if PlayAgain() == 1:
-                    num = 0
-                    hand = []
-                    bjstate.start()
+                    player = Player()
                     ai = AI()
                     pass
                 else:
                     break
             
-            elif bjstate.get_next_values(bjstate.state, num) == 'blackjack':
+            elif player.get_next_values(player.state, player.num) == 'blackjack':
                 print('Blackjack! You win!')
-                print('You had {} for a total of {}.'.format(hand, num))
+                print('You had {} for a total of {}.'.format(player.hand, player.num))
                 print('AI had {} for a total of {}'.format(ai.hand, ai.num))
                 if PlayAgain() == 1:
-                    num = 0
-                    hand = []
-                    bjstate.start()
+                    player = Player()
                     ai = AI()
                     pass
                 else:
@@ -117,95 +113,91 @@ if __name__ == "__main__":
             
             else:
                 pass
+            # all checks pass
 
             # AI plays
             ai.decide()
 
-            if ai.getnext == 'bust':
+            # check if AI bust/blackjack
+            if ai.getnext() == 'bust':
                 print('You win!')
-                print('You had {} for a total of {}.'.format(hand, num))
+                print('You had {} for a total of {}.'.format(player.hand, player.num))
                 print('AI had {} for a total of {}'.format(ai.hand, ai.num))
                 if PlayAgain() == 1:
-                    num = 0
-                    hand = []
-                    bjstate.start()
+                    player = Player()
                     ai = AI()
                     pass
                 else:
                     break
             elif ai.getnext() == 'blackjack':
                 print ('AI blackjack! You lose :(')
-                print('You had {} for a total of {}.'.format(hand, num))
+                print('You had {} for a total of {}.'.format(player.hand, player.num))
                 print('AI had {} for a total of {}'.format(ai.hand, ai.num))
                 if PlayAgain() == 1:
-                    num = 0
-                    hand = []
-                    bjstate.start()
+                    player = Player()
                     ai = AI()
                     pass
                 else:
                     break
+                # all checks pass, loop
         elif inp == 2:
+            #stand code
+
+            # AI plays until it stands
             while ai.standstate != True:
                 ai.decide()
                 
+            # check if AI bust/blackjack
             if ai.getnext() == 'bust':
-                print('You win!')
-                print('You had {} for a total of {}.'.format(hand, num))
+                print('You win! AI busted.')
+                print('You had {} for a total of {}.'.format(player.hand, player.num))
                 print('AI had {} for a total of {}'.format(ai.hand, ai.num))
                 if PlayAgain() == 1:
-                    num = 0
-                    hand = []
-                    bjstate.start()
+                    player = Player()
                     ai = AI()
                     pass
                 else:
                     break
             elif ai.getnext() == 'blackjack':
                 print ('AI blackjack! You lose :(')
-                print('You had {} for a total of {}.'.format(hand, num))
+                print('You had {} for a total of {}.'.format(player.hand, player.num))
                 print('AI had {} for a total of {}'.format(ai.hand, ai.num))
                 if PlayAgain() == 1:
-                    num = 0
-                    hand = []
-                    bjstate.start()
+                    player = Player()
                     ai = AI()
                     pass
                 else:
                     break
+            # all checks pass
+
             
-            elif ai.num > num:
+            # check for win/loss conditions
+            elif ai.num > player.num:
                 print('AI wins! You lose :(')
-                print('You had {} for a total of {}.'.format(hand, num))
+                print('You had {} for a total of {}.'.format(player.hand, player.num))
                 print('AI had {} for a total of {}'.format(ai.hand, ai.num))
                 if PlayAgain() == 1:
-                    num = 0
-                    hand = []
-                    bjstate.start()
+                    player = Player()
                     ai = AI()
                     pass
                 else:
                     break
-            elif ai.num < num:
+            elif ai.num < player.num:
                 print('You win!')
-                print('You had {} for a total of {}.'.format(hand, num))
+                print('You had {} for a total of {}.'.format(player.hand, player.num))
                 print('AI had {} for a total of {}'.format(ai.hand, ai.num))
                 if PlayAgain() == 1:
-                    num = 0
-                    hand = []
-                    bjstate.start()
+                    player = Player()
                     ai = AI()
                     pass
                 else:
                     break
             else:
                 print('It\'s a tie!')
-                print('You had {} for a total of {}.'.format(hand, num))
+                print('You had {} for a total of {}.'.format(player.hand, player.num))
                 print('AI had {} for a total of {}'.format(ai.hand, ai.num))
                 if PlayAgain() == 1:
-                    num = 0
-                    hand = []
-                    bjstate.start()
+                    player = Player()
                     ai = AI()
                     pass
                 else:
@@ -214,6 +206,11 @@ if __name__ == "__main__":
         else:
             print('Wrong input recieved!')
 
-    # check
-    # end
-    print('\n\nThank you for playing!')
+    #end
+    print('''
+    .___________. __    __       ___      .__   __.  __  ___   ____    ____  ______    __    __  
+    |           ||  |  |  |     /   \     |  \ |  | |  |/  /   \   \  /   / /  __  \  |  |  |  | 
+    `---|  |----`|  |__|  |    /  ^  \    |   \|  | |  '  /     \   \/   / |  |  |  | |  |  |  | 
+        |  |     |   __   |   /  /_\  \   |  . `  | |    <       \_    _/  |  |  |  | |  |  |  | 
+        |  |     |  |  |  |  /  _____  \  |  |\   | |  .  \        |  |    |  `--'  | |  `--'  | 
+        |__|     |__|  |__| /__/     \__\ |__| \__| |__|\__\       |__|     \______/   \______/  ''')                                       
